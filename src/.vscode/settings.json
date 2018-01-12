@@ -1,0 +1,23 @@
+{
+    "codedox": {
+        "fileheader": {
+            "templates": {
+                "*": [
+                    "${license_mit}"
+                ]
+            },
+            "params": {
+                "haxe": {
+                    "company": "Jeremy Meltingtallow"
+                },
+                "json": {
+                    "company": "Jeremy Meltingtallow"
+                }
+            }
+        }
+    },
+    "haxe.displayConfigurations": [
+        ["--cwd", "build", "project-html5.hxml"]
+    ],
+    "haxe.displayPort": 6000
+}
