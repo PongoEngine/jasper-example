@@ -24,6 +24,7 @@ package ui;
 import jasper.Variable;
 import jasper.Constraint;
 import jasper.Solver;
+import jasper.Strength;
 
 class Window
 {
@@ -70,29 +71,35 @@ class Window
 
     public function addWindow(childWindow :Window) : Window
     {
+        var x = _x + 0;
+        var y = _y + 0;
+        if(children.length > 0) {
+            var last = children[children.length-1];
+            y = last._y + last._height;
+        }
         switch childWindow.x {
             case PX(val, str): 
-                _constraints.push((childWindow._x == _x+val) | str);
+                _constraints.push((childWindow._x == x+val) | Strength.REQUIRED);
             case PERCENT(val, str):
-                _constraints.push((childWindow._x == _x+(val*_width)) | str);
+                _constraints.push((childWindow._x == x+(val*_width)) | Strength.REQUIRED);
         }
         switch childWindow.y {
             case PX(val, str): 
-                _constraints.push((childWindow._y == _y+val) | str);
+                _constraints.push((childWindow._y == y+val) | Strength.REQUIRED);
             case PERCENT(val, str):
-                _constraints.push((childWindow._y == _y+(val*_height)) | str);
+                _constraints.push((childWindow._y == y+(val*_height)) | Strength.REQUIRED);
         }
         switch childWindow.width {
             case PX(val, str): 
-                _constraints.push((_width == val) | str);
+                _constraints.push((_width == val) | Strength.REQUIRED);
             case PERCENT(val, str):
-                _constraints.push((childWindow._width == _width * val) | str);
+                _constraints.push((childWindow._width == _width * val) | Strength.REQUIRED);
         }
         switch childWindow.height {
             case PX(val, str): 
-                _constraints.push((_height == val) | str);
+                _constraints.push((_height == val) | Strength.REQUIRED);
             case PERCENT(val, str):
-                _constraints.push((childWindow._height == _height * val) | str);
+                _constraints.push((childWindow._height == _height * val) | Strength.REQUIRED);
         }
 
         children.push(childWindow);
@@ -108,6 +115,19 @@ class Window
             child.addToSolver(solver);
         }
         return this;
+    }
+
+    public function makeEdit(solver :Solver) : Void
+    {
+        solver.addEditVariable(_width, Strength.MEDIUM);
+        solver.addEditVariable(_height, Strength.MEDIUM);
+    }
+
+    public function setSize(width :Float, height :Float, solver :Solver) : Void
+    {
+        solver.suggestValue(_width, width);
+        solver.suggestValue(_height, height);
+        solver.updateVariables();
     }
 
     public function render(framebuffer: kha.Framebuffer): Void 
