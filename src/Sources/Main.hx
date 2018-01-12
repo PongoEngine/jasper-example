@@ -23,11 +23,31 @@ package;
 
 import kha.System;
 import jasper.*;
+import ui.Window;
 
 class Main {
     public static function main() : Void
     {
+        var solver = new Solver();
+        _baseWindow = new Window(0xff3333ff, PX(40, Strength.REQUIRED), PX(40, Strength.REQUIRED), PX(400, Strength.REQUIRED), PX(400, Strength.REQUIRED));
+        _baseWindow
+            .addWindow(new Window(0xff00ff33, PERCENT(0.25, Strength.MEDIUM), PERCENT(0.25, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM))
+                .addWindow(new Window(0xff007f33, PERCENT(0.25, Strength.MEDIUM), PERCENT(0.25, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM))));
+
+        _baseWindow.addToSolver(solver);
+        solver.updateVariables();
+
         System.init({title: "jasper-example", width: 1366, height: 768}, function() {
+            System.notifyOnRender(render);
         });
     }
+
+    public static function render(framebuffer: kha.Framebuffer): Void 
+    {
+        framebuffer.g2.begin();
+        _baseWindow.render(framebuffer);
+        framebuffer.g2.end();
+	}
+
+    static var _baseWindow :Window;
 }
