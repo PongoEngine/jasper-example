@@ -1,3 +1,6 @@
 [submodule "src/Libraries/jasper"]
 	path = src/Libraries/jasper
 	url = https://github.com/PongoEngine/jasper
+[submodule "src/Kha"]
+	path = src/Kha
+	url = https://github.com/KTXSoftware/Kha

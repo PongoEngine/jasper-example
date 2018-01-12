@@ -19,15 +19,9 @@
  * THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-package;
+package example;
 
-import kha.System;
-import jasper.*;
-
-class Main {
-    public static function main() : Void
-    {
-        System.init({title: "jasper-example", width: 1366, height: 768}, function() {
-        });
-    }
+class Window
+{
+    
 }
