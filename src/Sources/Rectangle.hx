@@ -19,12 +19,30 @@
  * THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-package ui;
+import jasper.Variable;
 
-import jasper.Strength;
-
-enum Length
+class Rectangle
 {
-    PX(val :Float, str :Strength);
-    PERCENT(val :Float, str :Strength);
+    public var x :Variable;
+    public var y :Variable;
+
+    public var width :Variable;
+    public var height :Variable;
+
+    public var color :Int;
+
+    public function new(color :Int) : Void
+    {
+        this.color = color;
+        x = new Variable();
+        y = new Variable();
+        width = new Variable();
+        height = new Variable();
+    }
+
+    public function render(framebuffer :kha.Framebuffer) : Void
+    {
+        framebuffer.g2.color = this.color;
+        framebuffer.g2.fillRect(x.m_value, y.m_value, width.m_value, height.m_value);
+    }
 }

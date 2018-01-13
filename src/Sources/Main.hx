@@ -23,7 +23,6 @@ package;
 
 import kha.System;
 import jasper.*;
-import ui.Window;
 
 class Main {
     public static function main() : Void
@@ -31,17 +30,42 @@ class Main {
         var _width :Float = 780;
         var _height :Float = 400;
         var solver = new Solver();
-        _baseWindow = new Window(0xff3333ff, PX(10, Strength.WEAK), PX(20, Strength.WEAK), PX(780, Strength.WEAK), PX(400, Strength.WEAK));
-        _baseWindow
-            .addWindow(new Window(0xfff0ff33, PERCENT(0.25, Strength.MEDIUM), PERCENT(0.25, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM)))
-            .addWindow(new Window(0xff00ff33, PERCENT(0.25, Strength.MEDIUM), PX(0, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM))
-                .addWindow(new Window(0xff007f33, PERCENT(0.25, Strength.MEDIUM), PERCENT(0.25, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM), PERCENT(0.5, Strength.MEDIUM))));
 
-        _baseWindow.addToSolver(solver);
-        solver.updateVariables();
+        var window = new Rectangle(0xff00ff00);
+        solver.addConstraint(window.x == 0);
+        solver.addConstraint(window.y == 0);
+        solver.addConstraint((window.width == _width) | Strength.WEAK);
+        solver.addConstraint((window.height == _height) | Strength.WEAK);
 
-        _baseWindow.makeEdit(solver);
+        var leftChild = new Rectangle(0xfff0ff00);
+        solver.addConstraint(leftChild.x == window.x + 10);
+        solver.addConstraint(leftChild.y == window.y + 10);
+        solver.addConstraint(leftChild.width == (window.width/2 - 20));
+        solver.addConstraint(leftChild.height == (window.height - 20));
+
+        var rightChild = new Rectangle(0xfff0ffff);
+        solver.addConstraint(rightChild.x == (window.x + window.width) - (window.width/2 - 10));
+        solver.addConstraint(rightChild.y == window.y + 10);
+        solver.addConstraint(rightChild.width == (window.width/2 - 20));
+        solver.addConstraint(rightChild.height == (window.height - 20));
+
+        var centerChild = new Rectangle(0xffffff00);
+        solver.addConstraint(centerChild.x == window.width/4);
+        solver.addConstraint(centerChild.y == window.height/4);
+        solver.addConstraint(centerChild.width == (window.width/2));
+        solver.addConstraint(centerChild.height == (window.height/2));
         
+
+
+        _rectangles = 
+            [ window
+            , leftChild
+            , rightChild
+            , centerChild
+            ];
+        solver.updateVariables();
+        solver.addEditVariable(window.width, Strength.MEDIUM);
+        solver.addEditVariable(window.height, Strength.MEDIUM);
 
         System.init({title: "jasper-example", width: 1366, height: 768}, function() {
             System.notifyOnRender(render);
@@ -54,7 +78,9 @@ class Main {
 
             }, function(x,y,c,d) {
                 if(_isDown) {
-                    _baseWindow.setSize(x, y, solver);
+                    solver.suggestValue(window.width, x);
+                    solver.suggestValue(window.height, y);
+                    solver.updateVariables();
                 }
                 
             }, function(a) {
@@ -66,9 +92,11 @@ class Main {
     public static function render(framebuffer: kha.Framebuffer): Void 
     {
         framebuffer.g2.begin();
-        _baseWindow.render(framebuffer);
+        for(rectangle in _rectangles) {
+            rectangle.render(framebuffer);
+        }
         framebuffer.g2.end();
 	}
 
-    static var _baseWindow :Window;
+    private static var _rectangles :Array<Rectangle>;
 }
