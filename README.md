@@ -3,6 +3,8 @@
 # Build Project
 
 git clone --recursive https://github.com/PongoEngine/jasper-example
+node Kha/make html5
+node Kha/make html5 --server
 
 
 ## Example Code
