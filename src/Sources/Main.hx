@@ -50,8 +50,8 @@ class Main {
         solver.addConstraint(rightChild.height == (window.height - 20));
 
         var centerChild = new Rectangle(0xffffff00);
-        solver.addConstraint(centerChild.x == window.width/4);
-        solver.addConstraint(centerChild.y == window.height/4);
+        solver.addConstraint(centerChild.x == window.x + window.width/4);
+        solver.addConstraint(centerChild.y == window.y + window.height/4);
         solver.addConstraint(centerChild.width == (window.width/2));
         solver.addConstraint(centerChild.height == (window.height/2));
 
