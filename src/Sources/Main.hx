@@ -137,6 +137,6 @@ class Rectangle
     public function render(framebuffer :kha.Framebuffer) : Void
     {
         framebuffer.g2.color = this.color;
-        framebuffer.g2.fillRect(x.m_value, y.m_value, width.m_value, height.m_value);
+        framebuffer.g2.fillRect(x, y, width, height);
     }
 }
