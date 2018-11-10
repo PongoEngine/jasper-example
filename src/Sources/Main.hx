@@ -28,8 +28,7 @@ class Main {
     public static function main() : Void
     {
         
-
-        System.init({title: "jasper-example", width: 800, height: 600}, function() {
+        System.start({title: "jasper-example", width: 800, height: 600}, function(window) {
             var width = System.windowWidth();
             var height = System.windowHeight();
             var solver = new Solver();
@@ -72,10 +71,9 @@ class Main {
             solver.updateVariables();
             solver.addEditVariable(window.width, Strength.MEDIUM);
             solver.addEditVariable(window.height, Strength.MEDIUM);
-            _shouldRender = true;
 
 
-            System.notifyOnRender(render);
+            System.notifyOnFrames(render);
 
             var _isDown :Bool = false;
             kha.input.Mouse.get().notify(function(b,x,y) {
@@ -83,7 +81,6 @@ class Main {
                 solver.suggestValue(window.width, x - 10);
                 solver.suggestValue(window.height, y - 10);
                 solver.updateVariables();
-                _shouldRender = true;
             }, function(b,x,y) {
                 _isDown = false;
             }, function(x,y,cX,cY) {
@@ -91,7 +88,6 @@ class Main {
                     solver.suggestValue(window.width, x - 10);
                     solver.suggestValue(window.height, y - 10);
                     solver.updateVariables();
-                    _shouldRender = true;
                 }
                 
             }, function(c) {
@@ -99,20 +95,17 @@ class Main {
         });
     }
 
-    public static function render(framebuffer: kha.Framebuffer): Void 
+    public static function render(buffers: Array<kha.Framebuffer>): Void 
     {
-        if(_shouldRender) {
-            framebuffer.g2.begin(0xffeeeeee);
-            for(rectangle in _rectangles) {
-                rectangle.render(framebuffer);
-            }
-            framebuffer.g2.end();
+        var framebuffer = buffers[0];
+        framebuffer.g2.begin(0xffeeeeee);
+        for(rectangle in _rectangles) {
+            rectangle.render(framebuffer);
         }
-        _shouldRender = false;
+        framebuffer.g2.end();
 	}
 
     private static var _rectangles :Array<Rectangle>;
-    private static var _shouldRender :Bool = true;
 }
 
 class Rectangle
@@ -137,6 +130,6 @@ class Rectangle
     public function render(framebuffer :kha.Framebuffer) : Void
     {
         framebuffer.g2.color = this.color;
-        framebuffer.g2.fillRect(x, y, width, height);
+        framebuffer.g2.fillRect(x.m_value, y.m_value, width.m_value, height.m_value);
     }
 }
